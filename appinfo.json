@@ -1,0 +1,19 @@
+{
+  "uuid": "ae47fb7d-aea0-4f3f-bdc0-adb86574869b",
+  "shortName": "colr",
+  "longName": "colr",
+  "companyName": "TheBlackParrot",
+  "versionLabel": "1.0",
+  "sdkVersion": "3",
+  "targetPlatforms": ["basalt"],
+  "enableMultiJS": false,
+  "watchapp": {
+    "watchface": true
+  },
+  "appKeys": {
+    "dummy": 0
+  },
+  "resources": {
+    "media": []
+  }
+}
