@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <pebble.h>
 
+// DISCLAIMER: I don't know C very well at all
+
 bool numbers[10][5][4] = {
 	{
 		{1, 1, 1, 1},
@@ -133,7 +135,7 @@ static void canvas_update_proc(Layer *s_canvas_layer, GContext *ctx) {
 
 	int px_size = 13;
 
-	APP_LOG(APP_LOG_LEVEL_DEBUG,"digits: %d %d %d %d", digits[0], digits[1], digits[2], digits[3]);
+	// APP_LOG(APP_LOG_LEVEL_DEBUG,"digits: %d %d %d %d", digits[0], digits[1], digits[2], digits[3]);
 
 	for(int i = 0; i < 11; ++i) {
 		for(int j = 0; j < 13; ++j) {
@@ -163,7 +165,7 @@ static void canvas_update_proc(Layer *s_canvas_layer, GContext *ctx) {
 			}
 
 			int drawing_num = digits[current_digit];
-			APP_LOG(APP_LOG_LEVEL_DEBUG,"current_digit: %d (%d)", digits[current_digit], current_digit);
+			//APP_LOG(APP_LOG_LEVEL_DEBUG,"current_digit: %d (%d)", digits[current_digit], current_digit);
 
 			int d_row = 0;
 			int d_col = 0;
@@ -215,7 +217,7 @@ static void canvas_update_proc(Layer *s_canvas_layer, GContext *ctx) {
 			}
 
 			int drawing_num = digits[current_digit];
-			APP_LOG(APP_LOG_LEVEL_DEBUG,"current_digit: %d (%d)", digits[current_digit], current_digit);
+			//APP_LOG(APP_LOG_LEVEL_DEBUG,"current_digit: %d (%d)", digits[current_digit], current_digit);
 
 			int d_row = 0;
 			int d_col = 0;
