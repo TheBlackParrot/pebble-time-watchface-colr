@@ -122,6 +122,15 @@ GColor colors[COLOR_PALETTES][COLOR_PARTS] = {
 	{GColorCeleste, GColorBabyBlueEyes, GColorPastelYellow}
 };
 
+void draw_custom_pixel(GContext *ctx, int x, int y, int px_size, GColor color) {
+	GRect rect_bounds = GRect(x, y, px_size, px_size);
+
+	graphics_context_set_fill_color(ctx, color);
+
+	graphics_draw_rect(ctx, rect_bounds);
+	graphics_fill_rect(ctx, rect_bounds, 0, GCornerNone);
+}
+
 static void canvas_update_proc(Layer *s_canvas_layer, GContext *ctx) {
 	int pal = rand() % COLOR_PALETTES;
 	//int pal = COLOR_PALETTES - 1;
@@ -143,12 +152,7 @@ static void canvas_update_proc(Layer *s_canvas_layer, GContext *ctx) {
 			int y = (px_size * j);
 
 			int col = rand() % COLOR_PARTS;
-			GRect rect_bounds = GRect(x, y, px_size, px_size);
-
-			graphics_context_set_fill_color(ctx, colors[pal][col]);
-
-			graphics_draw_rect(ctx, rect_bounds);
-			graphics_fill_rect(ctx, rect_bounds, 0, GCornersAll);
+			draw_custom_pixel(ctx, x, y, px_size, colors[pal][col]);
 		}
 	}
 
@@ -170,21 +174,26 @@ static void canvas_update_proc(Layer *s_canvas_layer, GContext *ctx) {
 			int d_row = 0;
 			int d_col = 0;
 			if(!draw) {
-				if(current_digit == 0) {
-					d_row = i - 1;
-					d_col = j - 1;
-				}
-				if(current_digit == 1) {
-					d_row = i - 6;
-					d_col = j - 1;
-				}
-				if(current_digit == 2) {
-					d_row = i - 1;
-					d_col = j - 7;
-				}
-				if(current_digit == 3) {
-					d_row = i - 6;
-					d_col = j - 7;
+				switch(current_digit) {
+					case 0:
+						d_row = i - 1;
+						d_col = j - 1;
+						break;
+
+					case 1:
+						d_row = i - 6;
+						d_col = j - 1;
+						break;
+
+					case 2:
+						d_row = i - 1;
+						d_col = j - 7;
+						break;
+
+					case 3:
+						d_row = i - 6;
+						d_col = j - 7;
+						break;
 				}
 			}
 
@@ -194,12 +203,7 @@ static void canvas_update_proc(Layer *s_canvas_layer, GContext *ctx) {
 			//APP_LOG(APP_LOG_LEVEL_DEBUG,"x %d y %d", x, y);
 
 			if(!(draw || (!draw && !numbers[drawing_num][d_col][d_row]))) {
-				GRect rect_bounds = GRect(x-2, y-2, px_size+4, px_size+4);
-
-				graphics_context_set_fill_color(ctx, GColorWhite);
-
-				graphics_draw_rect(ctx, rect_bounds);
-				graphics_fill_rect(ctx, rect_bounds, 0, GCornersAll);
+				draw_custom_pixel(ctx, x-2, y-2, px_size+4, GColorWhite);
 			}
 		}
 	}
@@ -222,21 +226,26 @@ static void canvas_update_proc(Layer *s_canvas_layer, GContext *ctx) {
 			int d_row = 0;
 			int d_col = 0;
 			if(!draw) {
-				if(current_digit == 0) {
-					d_row = i - 1;
-					d_col = j - 1;
-				}
-				if(current_digit == 1) {
-					d_row = i - 6;
-					d_col = j - 1;
-				}
-				if(current_digit == 2) {
-					d_row = i - 1;
-					d_col = j - 7;
-				}
-				if(current_digit == 3) {
-					d_row = i - 6;
-					d_col = j - 7;
+				switch(current_digit) {
+					case 0:
+						d_row = i - 1;
+						d_col = j - 1;
+						break;
+
+					case 1:
+						d_row = i - 6;
+						d_col = j - 1;
+						break;
+
+					case 2:
+						d_row = i - 1;
+						d_col = j - 7;
+						break;
+
+					case 3:
+						d_row = i - 6;
+						d_col = j - 7;
+						break;
 				}
 			}
 
@@ -246,12 +255,7 @@ static void canvas_update_proc(Layer *s_canvas_layer, GContext *ctx) {
 			//APP_LOG(APP_LOG_LEVEL_DEBUG,"x %d y %d", x, y);
 
 			if(!(draw || (!draw && !numbers[drawing_num][d_col][d_row]))) {
-				GRect rect_bounds = GRect(x, y, px_size, px_size);
-
-				graphics_context_set_fill_color(ctx, GColorBlack);
-
-				graphics_draw_rect(ctx, rect_bounds);
-				graphics_fill_rect(ctx, rect_bounds, 0, GCornersAll);
+				draw_custom_pixel(ctx, x, y, px_size, GColorBlack);
 			}
 		}
 	}
