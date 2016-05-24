@@ -132,6 +132,8 @@ void draw_custom_pixel(GContext *ctx, int x, int y, int px_size, GColor color) {
 }
 
 static void canvas_update_proc(Layer *s_canvas_layer, GContext *ctx) {
+	srand(time(NULL) - (time(NULL) % 60));
+
 	int pal = rand() % COLOR_PALETTES;
 	//int pal = COLOR_PALETTES - 1;
 
