@@ -91,7 +91,7 @@ static Layer *s_canvas_layer;
 int hour = 0;
 int minute = 0;
 
-#define COLOR_PALETTES 26
+#define COLOR_PALETTES 40
 #define COLOR_PARTS 3
 GColor colors[COLOR_PALETTES][COLOR_PARTS] = {
 	{GColorRed, GColorSunsetOrange, GColorMelon},
@@ -119,7 +119,25 @@ GColor colors[COLOR_PALETTES][COLOR_PARTS] = {
 	{GColorElectricUltramarine, GColorOxfordBlue, GColorLiberty},
 	{GColorDarkCandyAppleRed, GColorWindsorTan, GColorChromeYellow},
 	{GColorYellow, GColorPastelYellow, GColorLimerick},
-	{GColorCeleste, GColorBabyBlueEyes, GColorPastelYellow}
+	{GColorCeleste, GColorBabyBlueEyes, GColorPastelYellow},
+	{GColorRed, GColorImperialPurple, GColorBlue},
+	{GColorChromeYellow, GColorYellow, GColorWindsorTan},
+	{GColorWhite, GColorLightGray, GColorDarkGray},
+	{GColorIndigo, GColorLiberty, GColorBabyBlueEyes},
+	{GColorGreen, GColorCeleste, GColorYellow},
+	{GColorYellow, GColorMagenta, GColorVividViolet},
+	{GColorOrange, GColorVividCerulean, GColorBlue},
+	{GColorYellow, GColorFashionMagenta, GColorLavenderIndigo},
+	{GColorDarkGreen, GColorBlack, GColorJaegerGreen},
+	{GColorIndigo, GColorVividCerulean, GColorElectricBlue},
+	{GColorOrange, GColorGreen, GColorBlue},
+	{GColorDarkCandyAppleRed, GColorBulgarianRose, GColorWindsorTan},
+	{GColorBlack, GColorVividCerulean, GColorElectricBlue},
+	{GColorDarkCandyAppleRed, GColorDarkGreen, GColorDukeBlue}
+};
+
+bool is_dark[COLOR_PALETTES] = {
+	0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1
 };
 
 void draw_custom_pixel(GContext *ctx, int x, int y, int px_size, GColor color) {
@@ -136,6 +154,7 @@ static void canvas_update_proc(Layer *s_canvas_layer, GContext *ctx) {
 
 	int pal = rand() % COLOR_PALETTES;
 	//int pal = COLOR_PALETTES - 1;
+	//int pal = 33;
 
 	int digits[4] = {
 		(hour - (hour % 10))/10,
@@ -205,7 +224,7 @@ static void canvas_update_proc(Layer *s_canvas_layer, GContext *ctx) {
 			//APP_LOG(APP_LOG_LEVEL_DEBUG,"x %d y %d", x, y);
 
 			if(!(draw || (!draw && !numbers[drawing_num][d_col][d_row]))) {
-				draw_custom_pixel(ctx, x-2, y-2, px_size+4, GColorWhite);
+				draw_custom_pixel(ctx, x-2, y-2, px_size+4, is_dark[pal] ? GColorBlack : GColorWhite);
 			}
 		}
 	}
@@ -257,7 +276,7 @@ static void canvas_update_proc(Layer *s_canvas_layer, GContext *ctx) {
 			//APP_LOG(APP_LOG_LEVEL_DEBUG,"x %d y %d", x, y);
 
 			if(!(draw || (!draw && !numbers[drawing_num][d_col][d_row]))) {
-				draw_custom_pixel(ctx, x, y, px_size, GColorBlack);
+				draw_custom_pixel(ctx, x, y, px_size, is_dark[pal] ? GColorWhite : GColorBlack);
 			}
 		}
 	}
