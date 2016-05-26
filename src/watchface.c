@@ -141,7 +141,8 @@ bool is_dark[COLOR_PALETTES] = {
 };
 
 void draw_custom_pixel(GContext *ctx, int x, int y, int px_size, GColor color) {
-	GRect rect_bounds = GRect(x, y, px_size, px_size);
+	int pos = x/px_size;
+	GRect rect_bounds = GRect(x, y, (pos >= 10 ? px_size+1 : px_size), px_size);
 
 	graphics_context_set_fill_color(ctx, color);
 
