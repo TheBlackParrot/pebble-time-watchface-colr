@@ -1,6 +1,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <pebble.h>
+#include <math.h>
 
 // DISCLAIMER: I don't know C very well at all
 
@@ -91,58 +92,46 @@ static Layer *s_canvas_layer;
 int hour = 0;
 int minute = 0;
 
-#define COLOR_PALETTES 40
+#define COLOR_PALETTES 27
 #define COLOR_PARTS 3
-GColor colors[COLOR_PALETTES][COLOR_PARTS] = {
-	{GColorRed, GColorSunsetOrange, GColorMelon},
-	{GColorOrange, GColorRajah, GColorYellow},
-	{GColorYellow, GColorPastelYellow, GColorInchworm},
-	{GColorGreen, GColorScreaminGreen, GColorSpringBud},
-	{GColorGreen, GColorIslamicGreen, GColorDarkGreen},
-	{GColorMediumSpringGreen, GColorMalachite, GColorElectricBlue},
-	{GColorElectricBlue, GColorCyan, GColorCeleste},
-	{GColorCyan, GColorVividCerulean, GColorBlueMoon},
-	{GColorBlue, GColorBlueMoon, GColorVividCerulean},
-	{GColorIndigo, GColorPurple, GColorPurpureus},
-	{GColorMagenta, GColorBrilliantRose, GColorRichBrilliantLavender},
-	{GColorFashionMagenta, GColorBrilliantRose, GColorFolly},
-	{GColorRed, GColorBulgarianRose, GColorDarkCandyAppleRed},
-	{GColorOxfordBlue, GColorBlue, GColorDukeBlue},
-	{GColorImperialPurple, GColorPurple, GColorMagenta},
-	{GColorMidnightGreen, GColorCadetBlue, GColorCyan},
-	{GColorDarkGray, GColorLightGray, GColorBlack},
-	{GColorOxfordBlue, GColorJazzberryJam, GColorFashionMagenta},
-	{GColorChromeYellow, GColorYellow, GColorSpringBud},
-	{GColorSunsetOrange, GColorBrightGreen, GColorVividCerulean},
-	{GColorMelon, GColorPurple, GColorOrange},
-	{GColorCyan, GColorRed, GColorYellow},
-	{GColorElectricUltramarine, GColorOxfordBlue, GColorLiberty},
-	{GColorDarkCandyAppleRed, GColorWindsorTan, GColorChromeYellow},
-	{GColorYellow, GColorPastelYellow, GColorLimerick},
-	{GColorCeleste, GColorBabyBlueEyes, GColorPastelYellow},
-	{GColorRed, GColorImperialPurple, GColorBlue},
-	{GColorChromeYellow, GColorYellow, GColorWindsorTan},
-	{GColorWhite, GColorLightGray, GColorDarkGray},
-	{GColorIndigo, GColorLiberty, GColorBabyBlueEyes},
-	{GColorGreen, GColorCeleste, GColorYellow},
-	{GColorYellow, GColorMagenta, GColorVividViolet},
-	{GColorOrange, GColorVividCerulean, GColorBlue},
-	{GColorYellow, GColorFashionMagenta, GColorLavenderIndigo},
-	{GColorDarkGreen, GColorBlack, GColorJaegerGreen},
-	{GColorIndigo, GColorVividCerulean, GColorElectricBlue},
-	{GColorOrange, GColorGreen, GColorBlue},
-	{GColorDarkCandyAppleRed, GColorBulgarianRose, GColorWindsorTan},
+GColor colors[][COLOR_PARTS] = {
 	{GColorBlack, GColorVividCerulean, GColorElectricBlue},
-	{GColorDarkCandyAppleRed, GColorDarkGreen, GColorDukeBlue}
+	{GColorIndigo, GColorVividCerulean, GColorElectricBlue},
+	{GColorJaegerGreen, GColorDarkGreen, GColorBlack},
+	{GColorYellow, GColorFashionMagenta, GColorLavenderIndigo},
+	{GColorChromeYellow, GColorYellow, GColorWindsorTan},
+	{GColorRed, GColorImperialPurple, GColorBlue},
+	{GColorDarkCandyAppleRed, GColorWindsorTan, GColorChromeYellow},
+	{GColorOxfordBlue, GColorElectricUltramarine, GColorLiberty},
+	{GColorPurple, GColorOrange, GColorMelon},
+	{GColorVividCerulean, GColorSunsetOrange, GColorBrightGreen},
+	{GColorOxfordBlue, GColorJazzberryJam, GColorFashionMagenta},
+	{GColorLightGray, GColorDarkGray, GColorBlack},
+	{GColorMidnightGreen, GColorCadetBlue, GColorCyan},
+	{GColorImperialPurple, GColorPurple, GColorMagenta},
+	{GColorOxfordBlue, GColorDukeBlue, GColorBlueMoon},
+	{GColorBulgarianRose, GColorDarkCandyAppleRed, GColorRed},
+	{GColorMagenta, GColorBrilliantRose, GColorRichBrilliantLavender},
+	{GColorIndigo, GColorPurple, GColorPurpureus},
+	{GColorBlue, GColorBlueMoon, GColorVividCerulean},
+	{GColorCyan, GColorVividCerulean, GColorBlueMoon},
+	{GColorElectricBlue, GColorCyan, GColorCeleste},
+	{GColorGreen, GColorIslamicGreen, GColorDarkGreen},
+	{GColorGreen, GColorScreaminGreen, GColorSpringBud},
+	{GColorOrange, GColorRajah, GColorYellow},
+	{GColorRed, GColorSunsetOrange, GColorMelon},
+	{GColorDarkGray, GColorLightGray, GColorWhite},
+	{GColorRajah, GColorJaegerGreen, GColorDarkGreen},
 };
 
-bool is_dark[COLOR_PALETTES] = {
-	0, 0, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 1, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 1
+bool is_dark[] = {
+	1, 1, 1, 0, 0, 1, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1, 0, 0, 1, 0, 0
 };
 
 void draw_custom_pixel(GContext *ctx, int x, int y, int px_size, GColor color) {
 	int pos = x/px_size;
 	GRect rect_bounds = GRect(x, y, (pos >= 10 ? px_size+1 : px_size), px_size);
+	//GRect rect_bounds = GRect(x, y, px_size, px_size);
 
 	graphics_context_set_fill_color(ctx, color);
 
@@ -153,6 +142,7 @@ void draw_custom_pixel(GContext *ctx, int x, int y, int px_size, GColor color) {
 static void canvas_update_proc(Layer *s_canvas_layer, GContext *ctx) {
 	srand(time(NULL) - (time(NULL) % 60));
 
+	//int pal = 0;
 	int pal = rand() % COLOR_PALETTES;
 	//int pal = COLOR_PALETTES - 1;
 	//int pal = 33;
@@ -164,16 +154,45 @@ static void canvas_update_proc(Layer *s_canvas_layer, GContext *ctx) {
 		minute % 10
 	};
 
+	int screen_width = 11;
+	int screen_height = 13;
 	int px_size = 13;
 
 	// APP_LOG(APP_LOG_LEVEL_DEBUG,"digits: %d %d %d %d", digits[0], digits[1], digits[2], digits[3]);
 
-	for(int i = 0; i < 11; ++i) {
-		for(int j = 0; j < 13; ++j) {
-			int x = (px_size * i);
-			int y = (px_size * j);
+	// +2 on width/height respectively, can't be variables here
+	short grid[13][15] = { 0 };
 
-			int col = rand() % COLOR_PARTS;
+	for(int i = 0; i < screen_width+2; ++i) {
+		for(int j = 0; j < screen_height+2; ++j) {
+			grid[i][j] = rand() % 2;
+		}
+	}
+
+	for(int i = 1; i < screen_width+1; ++i) {
+		for(int j = 1; j < screen_height+1; ++j) {
+			int x = (px_size * (i-1));
+			int y = (px_size * (j-1));
+
+			int col = grid[i][j];
+			col = col + grid[i+1][j];
+			col = col + grid[i-1][j];
+			col = col + grid[i][j+1];
+			col = col + grid[i][j-1];
+
+			col = col - 1;
+
+			if(col <= 0) {
+				col = 0;
+			}
+			if(col > 2) {
+				col = 2;
+			}
+
+			if(rand() % 2 == 1) {
+				col = (col - 2) * -1;
+			}
+
 			draw_custom_pixel(ctx, x, y, px_size, colors[pal][col]);
 		}
 	}
@@ -225,7 +244,7 @@ static void canvas_update_proc(Layer *s_canvas_layer, GContext *ctx) {
 			//APP_LOG(APP_LOG_LEVEL_DEBUG,"x %d y %d", x, y);
 
 			if(!(draw || (!draw && !numbers[drawing_num][d_col][d_row]))) {
-				draw_custom_pixel(ctx, x-2, y-2, px_size+4, is_dark[pal] ? GColorBlack : GColorWhite);
+				draw_custom_pixel(ctx, x-3, y-3, px_size+6, is_dark[pal] ? GColorBlack : GColorWhite);
 			}
 		}
 	}
